@@ -76,11 +76,16 @@ export async function handleRequest(request: Request): Promise<Response> {
       <body>
         ${hrefs.split(',').map(href => html`
         <div class="card">
-          <a href="${href}">${href}</a>
+          <a href="${href}">
+            ${href}
+            <k-fetch href="?embedded=true&hrefs=${href}" as="html"></k-fetch>
+          </a>
         </div>
        `).join('\n')}
         
-        
+        <script type="module">
+          import('https://cdn.jsdelivr.net/npm/k-fetch@0.0.6/k-fetch.min.js');
+        </script>
       </body>
   </html>
     `, {headers});
