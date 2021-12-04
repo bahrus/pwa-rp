@@ -74,9 +74,12 @@ export async function handleRequest(request: Request): Promise<Response> {
         </style>
       </head>
       <body>
+        ${hrefs.split(',').map(href => html`
         <div class="card">
-          I am here
+          <a href="${href}">${href}</a>
         </div>
+       `).join('\n')}
+        
         
       </body>
   </html>
