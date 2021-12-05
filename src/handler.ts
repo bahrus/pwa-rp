@@ -1,5 +1,7 @@
 import { substrBetween } from './substrBetween';
 import { html } from './html';
+import { Manifest } from './manifest';
+import { splitBetween } from './substrBetween';
 
 const headers =  {
   "content-type": "text/html;charset=UTF-8",
@@ -90,7 +92,17 @@ export async function handleRequest(request: Request): Promise<Response> {
   </html>
     `, {headers});
   }
-  return new Response(html`
-    <div>iah</div>
+  const response = await fetch(hrefs, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/96.0.4664.55"
+    }
+  });
+  const homepage = await response.text();
+  const head = substrBetween(homepage, '<head', '</head>');
+  const manifestTagFragment = substrBetween(homepage, 'manifest', '>');
+  return new Response(`
+    <template>
+      <header${head}</header>
+    </template>
   `, {headers});
 }
