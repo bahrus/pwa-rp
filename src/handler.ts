@@ -57,8 +57,21 @@ export async function handleRequest(request: Request): Promise<Response> {
   });
   const manifest = await response.json() as Manifest;  
   return new Response(html`
-  <section>
-    <h1>${manifest.name}</h1>
+  <section itemscope itemtype="https://json.schemastore.org/web-manifest.json">
+    <h1 itemprop="name">${manifest.name}</h1>
+    <h2 itemprop="short_name">${manifest.short_name}</h2>
+    <h3 itemprop="description">${manifest.description}</h3>
+    <ul itemprop="icons">
+    ${manifest.icons ? manifest.icons.map(icon => html`
+      <li>
+        <img src="${icon.src}" alt="${icon.type}" itemprop="${icon.type}">
+      </li>
+    `).join('') : html``}
+    </ul>
+    <label for="theme_color">Theme Color</label>
+    <input type="color" name="theme_color" value="${manifest.theme_color}" />
+    <label for="background_color">Background Color</label>
+    <input type="color" name="background_color" value="${manifest.background_color}" />
   </section>
   `, {headers});
 }

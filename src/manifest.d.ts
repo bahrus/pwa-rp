@@ -1,6 +1,7 @@
 export interface Manifest {
   "name": string,
   "short_name": string,
+  "theme_color": string,
   "start_url": string,
   "display": "standalone" | "fullscreen" | "minimal-ui" | "browser",
   "background_color": string,
