@@ -3,12 +3,14 @@ import { html } from './html';
 import { Manifest } from './manifest';
 import { splitBetween } from './substrBetween';
 
+
 const headers =  {
   "content-type": "text/html;charset=UTF-8",
   'Access-Control-Allow-Origin': '*',
 };
 
 export async function handleRequest(request: Request): Promise<Response> {
+
   const mobile = request.headers.get('Sec-ch-ua-mobile') === '?1';
   const url = request.url;
   const hrefs = unescape(substrBetween(url, 'hrefs=', '&'));
