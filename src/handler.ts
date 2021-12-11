@@ -72,6 +72,9 @@ export async function handleRequest(request: Request): Promise<Response> {
     <input type="color" name="theme_color" value="${manifest.theme_color}" />
     <label for="background_color">Background Color</label>
     <input type="color" name="background_color" value="${manifest.background_color}" />
+    <dl>
+      
+    </dl>
   </section>
   `, {headers});
 }
