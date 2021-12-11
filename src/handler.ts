@@ -3,6 +3,7 @@ import { html } from './html';
 import { JSONSchemaForWebApplicationManifestFiles } from './manifest';
 import { splitBetween } from './substrBetween';
 
+declare const MY_NS: any;
 
 const headers =  {
   "content-type": "text/html;charset=UTF-8",
@@ -50,42 +51,68 @@ export async function handleRequest(request: Request): Promise<Response> {
   `, {headers});
   }
   const ua = unescape(substrBetween(url, 'ua=', '&')) || request.headers.get('user-agent') || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/96.0.4664.55";
-  const response = await fetch(href, {
-    headers: {
-      "User-Agent": ua,
+  const ts = unescape(substrBetween(url, 'ts=', '&'));
+
+  
+  let manifest: JSONSchemaForWebApplicationManifestFiles | undefined;
+  if(ts){
+    const text = await MY_NS.get(ts);
+    if(text){
+      console.log('parsing from cache');
+      manifest = JSON.parse(text);
     }
-  });
-  const manifest = await response.json() as JSONSchemaForWebApplicationManifestFiles;  
+  }
+  if(manifest === undefined) {
+    const response = await fetch(href, {
+      headers: {
+        "User-Agent": ua,
+      }
+    });
+    const manifestTest = await response.text(); 
+
+    try{
+      manifest = JSON.parse(manifestTest);
+      if(ts){
+        await MY_NS.put(ts, manifestTest);
+      }
+    }catch(e){
+      console.error('Cannot parse:');
+      console.error(manifestTest);
+      return new Response(html`
+      ${manifestTest}
+      `, {headers});
+    }
+  }
   return new Response(html`
   <section itemscope itemtype="https://json.schemastore.org/web-manifest.json">
     <fieldset>
       <legend>Identity</legend>
       <dl>
         <dt>Short Name</dt>
-        <dd itemprop="short_name">${manifest.short_name!}</dd>
+        <dd itemprop="short_name">${manifest!.short_name!}</dd>
         <dt>Name</dt>
-        <dd itemprop="name">${manifest.name!}</dd>
+        <dd itemprop="name">${manifest!.name!}</dd>
         <dt>Description</dt>
-        <dd itemprop="description">${manifest.description!}</dd>
-        <dt>Start URL</dt>
-        <dd itemprop="id">${manifest.id!}</dd>
+        <dd itemprop="description">${manifest!.description!}</dd>
+        <dt>ID</dt>
+        <dd itemprop="id">${manifest!.id!}</dd>
       </dl>
-      
-      
-      
     </fieldset>
+
     <fieldset>
       <legend>Display</legend>
       <label>Theme Color
-        <input readonly type="color" name="theme_color" value="${manifest.theme_color!}" />
+        <input readonly type="color" name="theme_color" value="${manifest!.theme_color!}" />
       </label>
       
       <label>
         Background Color
-        <input readonly type="color" name="background_color" value="${manifest.background_color!}" />
+        <input readonly type="color" name="background_color" value="${manifest!.background_color!}" />
       </label>
       
 
+
+      <a href="${manifest!.start_url!}" itemprop="start_url" target=_blank>${manifest!.start_url!}</a>
 
     </fieldset>
 
@@ -101,7 +128,7 @@ export async function handleRequest(request: Request): Promise<Response> {
         </tr>
       </thead>
       <tbody>
-        ${manifest.icons ? manifest.icons.map(icon => html`
+        ${manifest!.icons ? manifest!.icons.map(icon => html`
           <tr>
             <td itemtype="purpose">${icon.purpose!}</td>
             <td>

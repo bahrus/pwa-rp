@@ -5,8 +5,13 @@ account_id = ""
 route = ""
 workers_dev = true
 compatibility_date = "2021-12-04"
+kv_namespaces = [
+    { binding = "MY_NS", id = "e4c5d73b9b0d496191b6e6506ef2d016", preview_id = "1a026613cd3f488c9fb7bd4c6ade5a32" }
+]
 
 [build]
 command = "npm install && npm run build"
 [build.upload]
 format = "service-worker"
+
+
