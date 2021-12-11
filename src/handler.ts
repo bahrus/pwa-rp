@@ -60,10 +60,19 @@ export async function handleRequest(request: Request): Promise<Response> {
   <section itemscope itemtype="https://json.schemastore.org/web-manifest.json">
     <fieldset>
       <legend>Identity</legend>
-      <h1 itemprop="short_name">${manifest.short_name!}</h1>
-      <h2 itemprop="name">${manifest.name!}</h2>
-      <h3 itemprop="description">${manifest.description!}</h3>
-      <h4 itemprop="id">${manifest.id!}</h4>
+      <dl>
+        <dt>Short Name</dt>
+        <dd itemprop="short_name">${manifest.short_name!}</dd>
+        <dt>Name</dt>
+        <dd itemprop="name">${manifest.name!}</dd>
+        <dt>Description</dt>
+        <dd itemprop="description">${manifest.description!}</dd>
+        <dt>Start URL</dt>
+        <dd itemprop="id">${manifest.id!}</dd>
+      </dl>
+      
+      
+      
     </fieldset>
     <fieldset>
       <legend>Display</legend>
@@ -79,7 +88,10 @@ export async function handleRequest(request: Request): Promise<Response> {
 
 
     </fieldset>
-    <table itemprop="icons">
+
+    <fieldset itemprop="icons">
+      <legend>Icons</legend>
+      <table>
       <thead>
         <tr>
           <th>Purpose</th>
@@ -102,6 +114,8 @@ export async function handleRequest(request: Request): Promise<Response> {
       </tbody>
 
     </table>
+    </fieldset>
+
 
 
   </section>
