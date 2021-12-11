@@ -155,7 +155,7 @@ export async function handleRequest(request: Request): Promise<Response> {
         <tr>
           <td itemtype="purpose">${screenshot.purpose!}</td>
           <td>
-            <img src="${screenshot.src}" alt="${screenshot.type!}"  itemprop="src">
+            <img src="${getFQUrl(screenshot.src, href)}" alt="${screenshot.type!}"  itemprop="src">
           </td>
         </tr>
       `).join('') : html``}
@@ -166,9 +166,13 @@ export async function handleRequest(request: Request): Promise<Response> {
   `, {headers});
 }
 
+function getDomain(href: string){
+  const url = new URL(href);
+  return url.hostname;
+}
 function getFQUrl(url: string, href: string): string {
   if(url.startsWith('/')){
-    return url;
+    return `https://${getDomain(href)}/${url}`;
   }
   return url;
 }
