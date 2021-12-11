@@ -116,34 +116,51 @@ export async function handleRequest(request: Request): Promise<Response> {
 
     </fieldset>
 
-    <fieldset itemprop="icons">
-      <legend>Icons</legend>
-      <table>
-      <thead>
+
+    <table itemprop="icons">
+      <caption>Icons</caption>
+    <thead>
+      <tr>
+        <th>Purpose</th>
+        <th>Image</th>
+        <th>Type</th>
+        <th>Sizes</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${manifest!.icons ? manifest!.icons.map(icon => html`
         <tr>
-          <th>Purpose</th>
-          <th>Image</th>
-          <th>Type</th>
-          <th>Sizes</th>
+          <td itemtype="purpose">${icon.purpose!}</td>
+          <td>
+            
+          </td>
+          <td>${icon.type!}</td>
+          <td>${icon.sizes!}</td>
         </tr>
-      </thead>
-      <tbody>
-        ${manifest!.icons ? manifest!.icons.map(icon => html`
-          <tr>
-            <td itemtype="purpose">${icon.purpose!}</td>
-            <td>
-              <img src="${icon.src}" alt="${icon.type!}"  itemprop="src">
-            </td>
-            <td>${icon.type!}</td>
-            <td>${icon.sizes!}</td>
-          </tr>
-        `).join('') : html``}
-      </tbody>
+      `).join('') : html``}
+    </tbody>
 
-    </table>
-    </fieldset>
+  </table>
 
-
+  <table itemprop="screenshots">
+    <caption>Screenshots</caption>
+    <thead>
+      <tr>
+        <th>Purpose</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${manifest!.screenshots ? manifest!.screenshots.map(screenshot => html`
+        <tr>
+          <td itemtype="purpose">${screenshot.purpose!}</td>
+          <td>
+            <img src="${screenshot.src}" alt="${screenshot.type!}"  itemprop="src">
+          </td>
+        </tr>
+      `).join('') : html``}
+    </tbody>
+  </table>
 
   </section>
   `, {headers});
