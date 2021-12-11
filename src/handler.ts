@@ -1,6 +1,6 @@
 import { substrBetween } from './substrBetween';
 import { html } from './html';
-import { Manifest } from './manifest';
+import { JSONSchemaForWebApplicationManifestFiles } from './manifest';
 import { splitBetween } from './substrBetween';
 
 
@@ -55,26 +55,55 @@ export async function handleRequest(request: Request): Promise<Response> {
       "User-Agent": ua,
     }
   });
-  const manifest = await response.json() as Manifest;  
+  const manifest = await response.json() as JSONSchemaForWebApplicationManifestFiles;  
   return new Response(html`
   <section itemscope itemtype="https://json.schemastore.org/web-manifest.json">
-    <h1 itemprop="name">${manifest.name}</h1>
-    <h2 itemprop="short_name">${manifest.short_name}</h2>
-    <h3 itemprop="description">${manifest.description}</h3>
-    <ul itemprop="icons">
-    ${manifest.icons ? manifest.icons.map(icon => html`
-      <li>
-        <img src="${icon.src}" alt="${icon.type}" itemprop="${icon.type}">
-      </li>
-    `).join('') : html``}
-    </ul>
-    <label for="theme_color">Theme Color</label>
-    <input type="color" name="theme_color" value="${manifest.theme_color}" />
-    <label for="background_color">Background Color</label>
-    <input type="color" name="background_color" value="${manifest.background_color}" />
-    <dl>
+    <fieldset>
+      <legend>Identity</legend>
+      <h1 itemprop="short_name">${manifest.short_name!}</h1>
+      <h2 itemprop="name">${manifest.name!}</h2>
+      <h3 itemprop="description">${manifest.description!}</h3>
+      <h4 itemprop="id">${manifest.id!}</h4>
+    </fieldset>
+    <fieldset>
+      <legend>Display</legend>
+      <label>Theme Color
+        <input readonly type="color" name="theme_color" value="${manifest.theme_color!}" />
+      </label>
       
-    </dl>
+      <label>
+        Background Color
+        <input readonly type="color" name="background_color" value="${manifest.background_color!}" />
+      </label>
+      
+
+
+    </fieldset>
+    <table itemprop="icons">
+      <thead>
+        <tr>
+          <th>Purpose</th>
+          <th>Image</th>
+          <th>Type</th>
+          <th>Sizes</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${manifest.icons ? manifest.icons.map(icon => html`
+          <tr>
+            <td itemtype="purpose">${icon.purpose!}</td>
+            <td>
+              <img src="${icon.src}" alt="${icon.type!}"  itemprop="src">
+            </td>
+            <td>${icon.type!}</td>
+            <td>${icon.sizes!}</td>
+          </tr>
+        `).join('') : html``}
+      </tbody>
+
+    </table>
+
+
   </section>
   `, {headers});
 }
