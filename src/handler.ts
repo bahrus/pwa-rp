@@ -132,7 +132,7 @@ export async function handleRequest(request: Request): Promise<Response> {
         <tr>
           <td itemtype="purpose">${icon.purpose!}</td>
           <td>
-            
+            <img src="${getFQUrl(icon.src, href)}" alt="${icon.type!}"  itemprop="src">
           </td>
           <td>${icon.type!}</td>
           <td>${icon.sizes!}</td>
