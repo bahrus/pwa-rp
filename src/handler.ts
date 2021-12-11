@@ -165,3 +165,10 @@ export async function handleRequest(request: Request): Promise<Response> {
   </section>
   `, {headers});
 }
+
+function getFQUrl(url: string, href: string): string {
+  if(url.startsWith('/')){
+    return url;
+  }
+  return url;
+}
