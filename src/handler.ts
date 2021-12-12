@@ -162,6 +162,26 @@ export async function handleRequest(request: Request): Promise<Response> {
     </tbody>
   </table>
 
+  <table itemprop="related_applications">
+    <caption>Related Applications</caption>
+    <thead>
+      <tr>
+        <th>Platform</th>
+        <th>URL</th>
+        <th>Min Version</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${manifest!.related_applications ? manifest!.related_applications.map(related_applications => html`
+        <tr>
+          <td itemprop="platform">${related_applications.platform!}</td>
+          <td itemprop="url">${related_applications.url!}</td>
+          <td itemprop="min_version">${related_applications.min_version!}</td>
+        </tr>
+      `).join('') : html``}
+    </tbody>
+  </table>
+
   </section>
   `, {headers});
 }
