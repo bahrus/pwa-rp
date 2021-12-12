@@ -193,6 +193,12 @@ function getDomain(href: string){
 function getFQUrl(url: string, href: string): string {
   if(url.startsWith('/')){
     return `https://${getDomain(href)}/${url}`;
+  }else if(url.startsWith('http')){
+    return url;
+  }else if(url.startsWith('../')){
+    return url;
+  }else{
+    return `https://${getDomain(href)}/${url}`;
   }
   return url;
 }
